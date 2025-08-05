@@ -1,0 +1,10 @@
+transformers
+TTS
+torch
+gradio
+scipy
+gtts
+librosa
+soundfile
+tempfile
+os
