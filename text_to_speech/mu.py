@@ -4,12 +4,10 @@ import torch
 import os
 import gradio as gr
 
-
 device = "cuda" if torch.cuda.is_available() else "cpu"
 os.makedirs("outputs", exist_ok=True)
 
 classifier = pipeline("text-classification", model="facebook/roberta-hate-speech-dynabench-r4-target")
-
 tts = TTS(model_name="tts_models/multilingual/multi-dataset/xtts_v2").to(device)
 
 def is_text_toxic(text, threshold=0.6):
@@ -22,14 +20,13 @@ def is_text_toxic(text, threshold=0.6):
             return True
     return False
 
-
 def process_text(text):
     if is_text_toxic(text):
-        return "⚠️ Toxic or abusive content detected. No audio generated.", None
+        return "Toxic or abusive content detected. No audio generated.", None
     else:
         audio_path = "./outputs/output.wav"
         tts.tts_to_file(text=text, file_path=audio_path)
-        return "✅ Text is clean. Audio generated successfully.", audio_path
+        return "Text is clean. Audio generated successfully.", audio_path
 
 interface = gr.Interface(
     fn=process_text,

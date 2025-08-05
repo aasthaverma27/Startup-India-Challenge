@@ -1,4 +1,3 @@
-# sk_0355b20cdaa6384a71337cb48a6010167b9b6491fb37c736
 import os
 import gradio as gr
 import requests
@@ -6,21 +5,16 @@ import torch
 from transformers import pipeline
 from deep_translator import GoogleTranslator
 
-ELEVENLABS_API_KEY = "sk_0355b20cdaa6384a71337cb48a6010167b9b6491fb37c736"
+ELEVENLABS_API_KEY = "your api key"
 VOICE_ID = "JS6C6yu2x9Byh4i1a8lX"
 
-# Setup
 device = "cuda" if torch.cuda.is_available() else "cpu"
 os.makedirs("outputs", exist_ok=True)
-
-# Load multilingual toxic content classifier
 classifier = pipeline("text-classification", model="martin-ha/toxic-comment-model")
 
-# Translate text (Hindi or any language) to English
 def translate_to_english(text):
     return GoogleTranslator(source='auto', target='en').translate(text)
 
-# Check if translated text is toxic
 def is_text_toxic(text, threshold=0.7):
     translated = translate_to_english(text)
     print(f"[Translated for classification] → {translated}")
@@ -33,7 +27,6 @@ def is_text_toxic(text, threshold=0.7):
             return True
     return False
 
-# Simple emotion detection from key words
 def detect_emotion(text):
     text = text.lower()
     if "happy" in text or "खुश" in text:
@@ -45,7 +38,6 @@ def detect_emotion(text):
     else:
         return "neutral"
 
-# Map detected emotion to ElevenLabs style float
 def get_style_from_emotion(emotion):
     return {
         "happy": 1.0,
@@ -54,7 +46,6 @@ def get_style_from_emotion(emotion):
         "neutral": 0.5
     }.get(emotion, 0.5)
 
-# Generate speech with ElevenLabs
 def process_text(text):
     if not text.strip():
         return "❌ Please enter some text.", None
@@ -94,7 +85,6 @@ def process_text(text):
     except Exception as e:
         return f"❌ Error: {str(e)}", None
 
-# Gradio Interface
 interface = gr.Interface(
     fn=process_text,
     inputs=gr.TextArea(label="Enter Hindi or English Text"),
@@ -103,7 +93,7 @@ interface = gr.Interface(
         gr.Audio(label="Generated Audio", type="filepath")
     ],
     title="Safe Hindi/English TTS with Emotion & Toxic Filter",
-    description="🎙️ Type a sentence. Detects emotion (happy, sad, angry), blocks toxic content, and generates expressive speech using ElevenLabs."
+    description="Type a sentence. Detects emotion (happy, sad, angry), blocks toxic content, and generates expressive speech."
 )
 
 interface.launch()

@@ -5,14 +5,13 @@ import torch
 from transformers import pipeline
 from deep_translator import GoogleTranslator
 
-ELEVENLABS_API_KEY = "sk_0355b20cdaa6384a71337cb48a6010167b9b6491fb37c736"
+ELEVENLABS_API_KEY = "your api key"
 VOICE_ID = "JS6C6yu2x9Byh4i1a8lX"
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 os.makedirs("outputs", exist_ok=True)
 
 toxicity_classifier = pipeline("text-classification", model="martin-ha/toxic-comment-model", device=0 if device=="cuda" else -1)
-
 emotion_classifier = pipeline("text-classification", model="j-hartmann/emotion-english-distilroberta-base", return_all_scores=True, device=0 if device=="cuda" else -1)
 
 def translate_to_english(text):
@@ -52,10 +51,8 @@ def get_style_from_emotion(emotion):
 def process_text(text):
     if not text.strip():
         return "❌ Please enter some text.", None
-
     if is_text_toxic(text):
         return "⚠️ Toxic or abusive content detected. Please use clean language.", None
-
     emotion = detect_emotion(text)
     style_value = get_style_from_emotion(emotion)
 
@@ -75,7 +72,6 @@ def process_text(text):
             "use_speaker_boost": True
         }
     }
-
     try:
         response = requests.post(url, headers=headers, json=payload)
         if response.status_code == 200:
@@ -87,7 +83,6 @@ def process_text(text):
             return f"❌ Failed to generate audio. API Error: {response.status_code} - {response.text}", None
     except Exception as e:
         return f"❌ Error: {str(e)}", None
-
 interface = gr.Interface(
     fn=process_text,
     inputs=gr.TextArea(label="Enter Hindi or English Text"),
@@ -100,4 +95,3 @@ interface = gr.Interface(
 )
 
 interface.launch()
-sou

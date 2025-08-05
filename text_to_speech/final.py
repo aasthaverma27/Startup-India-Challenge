@@ -129,6 +129,7 @@ def process_text(text, selected_ambience):
         response = requests.post(url, headers=headers, json=payload)
         end_time = time.time()
         latency, ram, cpu, gpu = get_system_metrics(start_time, end_time)
+
         metrics = (
             f"Inference Time: {latency:.2f} sec | "
             f"RAM: {ram:.1f} MB | CPU: {cpu:.1f}% | GPU: {gpu}"
@@ -159,5 +160,4 @@ interface = gr.Interface(
     title="Safe Hindi/English TTS with Emotion & Ambience",
     description="Enter any Hindi/English sentence. Detects emotion and ambience, filters toxic content, and generates expressive speech with real-time system metrics."
 )
-
 interface.launch()
