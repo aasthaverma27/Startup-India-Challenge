@@ -14,7 +14,7 @@ from deep_translator import GoogleTranslator
 logging.basicConfig(level=logging.INFO)
 
 # Constants
-ELEVENLABS_API_KEY = "sk_0355b20cdaa6384a71337cb48a6010167b9b6491fb37c736"
+ELEVENLABS_API_KEY = "your api key"
 device = "cuda" if torch.cuda.is_available() else "cpu"
 device_id = 0 if device == "cuda" else -1
 os.makedirs("outputs", exist_ok=True)
